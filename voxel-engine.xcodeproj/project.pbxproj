@@ -7,24 +7,45 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DF73E2BE23F3250E00E24124 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF73E2BD23F3250E00E24124 /* main.cpp */; };
+		DF73E2C623F3252500E24124 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF73E2C523F3252500E24124 /* OpenGL.framework */; };
+		DF73E2C823F3257000E24124 /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF73E2C723F3257000E24124 /* libglfw.3.3.dylib */; };
+		DF73E2CA23F3258400E24124 /* libGLEW.2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF73E2C923F3258400E24124 /* libGLEW.2.1.0.dylib */; };
+		DF73E2CC23F325A600E24124 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF73E2CB23F325A600E24124 /* main.cpp */; };
+		DF73E2D123F326DF00E24124 /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = DF73E2D023F326DF00E24124 /* glad.c */; };
+		DF73E2D523F32CC500E24124 /* shader.vs in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF73E2D323F32A2C00E24124 /* shader.vs */; };
+		DF73E2D623F32CC500E24124 /* shader.fs in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF73E2D423F32A3F00E24124 /* shader.fs */; };
+		DF73E2D823F32D3B00E24124 /* container.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF73E2D723F32D3B00E24124 /* container.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		DF73E2B823F3250E00E24124 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 16;
 			files = (
+				DF73E2D823F32D3B00E24124 /* container.jpg in CopyFiles */,
+				DF73E2D523F32CC500E24124 /* shader.vs in CopyFiles */,
+				DF73E2D623F32CC500E24124 /* shader.fs in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		DF73E2BA23F3250E00E24124 /* voxel-engine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "voxel-engine"; sourceTree = BUILT_PRODUCTS_DIR; };
-		DF73E2BD23F3250E00E24124 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		DF73E2C523F3252500E24124 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		DF73E2C723F3257000E24124 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../../usr/local/Cellar/glfw/3.3.2/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
+		DF73E2C923F3258400E24124 /* libGLEW.2.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.1.0.dylib; path = ../../../../../../../usr/local/Cellar/glew/2.1.0_1/lib/libGLEW.2.1.0.dylib; sourceTree = "<group>"; };
+		DF73E2CB23F325A600E24124 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		DF73E2CD23F3260100E24124 /* voxel-engine.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "voxel-engine.entitlements"; sourceTree = "<group>"; };
+		DF73E2CE23F3268B00E24124 /* shader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
+		DF73E2CF23F326B000E24124 /* camera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = camera.h; sourceTree = "<group>"; };
+		DF73E2D023F326DF00E24124 /* glad.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = glad.c; sourceTree = "<group>"; };
+		DF73E2D223F327CB00E24124 /* stb_image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
+		DF73E2D323F32A2C00E24124 /* shader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; path = shader.vs; sourceTree = "<group>"; };
+		DF73E2D423F32A3F00E24124 /* shader.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; path = shader.fs; sourceTree = "<group>"; };
+		DF73E2D723F32D3B00E24124 /* container.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = container.jpg; path = "voxel-engine/container.jpg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +53,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF73E2CA23F3258400E24124 /* libGLEW.2.1.0.dylib in Frameworks */,
+				DF73E2C823F3257000E24124 /* libglfw.3.3.dylib in Frameworks */,
+				DF73E2C623F3252500E24124 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,8 +65,10 @@
 		DF73E2B123F3250E00E24124 = {
 			isa = PBXGroup;
 			children = (
+				DF73E2D723F32D3B00E24124 /* container.jpg */,
 				DF73E2BC23F3250E00E24124 /* voxel-engine */,
 				DF73E2BB23F3250E00E24124 /* Products */,
+				DF73E2C423F3252500E24124 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -57,9 +83,26 @@
 		DF73E2BC23F3250E00E24124 /* voxel-engine */ = {
 			isa = PBXGroup;
 			children = (
-				DF73E2BD23F3250E00E24124 /* main.cpp */,
+				DF73E2CD23F3260100E24124 /* voxel-engine.entitlements */,
+				DF73E2CB23F325A600E24124 /* main.cpp */,
+				DF73E2D323F32A2C00E24124 /* shader.vs */,
+				DF73E2D423F32A3F00E24124 /* shader.fs */,
+				DF73E2CE23F3268B00E24124 /* shader.h */,
+				DF73E2D223F327CB00E24124 /* stb_image.h */,
+				DF73E2CF23F326B000E24124 /* camera.h */,
+				DF73E2D023F326DF00E24124 /* glad.c */,
 			);
 			path = "voxel-engine";
+			sourceTree = "<group>";
+		};
+		DF73E2C423F3252500E24124 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DF73E2C923F3258400E24124 /* libGLEW.2.1.0.dylib */,
+				DF73E2C723F3257000E24124 /* libglfw.3.3.dylib */,
+				DF73E2C523F3252500E24124 /* OpenGL.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,7 +162,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF73E2BE23F3250E00E24124 /* main.cpp in Sources */,
+				DF73E2CC23F325A600E24124 /* main.cpp in Sources */,
+				DF73E2D123F326DF00E24124 /* glad.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,9 +282,16 @@
 		DF73E2C223F3250E00E24124 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "voxel-engine/voxel-engine.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = B8P6FU425R;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/glfw/3.3.2/lib,
+					/usr/local/Cellar/glew/2.1.0_1/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -248,9 +299,16 @@
 		DF73E2C323F3250E00E24124 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "voxel-engine/voxel-engine.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = B8P6FU425R;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/glfw/3.3.2/lib,
+					/usr/local/Cellar/glew/2.1.0_1/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
