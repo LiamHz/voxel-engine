@@ -82,7 +82,7 @@ int main() {
         
         // Render cube
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawArrays(GL_TRIANGLES, 0, 2700);
         
         glfwPollEvents();
         
@@ -97,9 +97,10 @@ int main() {
 }
 
 int setup_shaders(Shader shader) {
-    // Define cube vertices
-    std::vector<float> vertices;
-    vertices = draw_cube(1, 0, 0);
+    // std::vector<float> vertices;
+    std::vector<float> chunk;
+    // vertices = get_cube(1, 0, 0);
+    chunk = get_chunk(0, 0, 0, 3, 3, 3);
     
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -107,7 +108,7 @@ int setup_shaders(Shader shader) {
     glBindVertexArray(VAO);
     
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, chunk.size() * sizeof(float), chunk.data(), GL_STATIC_DRAW);
     
     // Configure vertex position and texture attributes
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
