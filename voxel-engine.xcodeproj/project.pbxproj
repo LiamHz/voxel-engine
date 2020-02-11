@@ -46,6 +46,7 @@
 		DF73E2D323F32A2C00E24124 /* shader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; path = shader.vs; sourceTree = "<group>"; };
 		DF73E2D423F32A3F00E24124 /* shader.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; path = shader.fs; sourceTree = "<group>"; };
 		DF73E2D723F32D3B00E24124 /* container.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = container.jpg; path = "voxel-engine/container.jpg"; sourceTree = "<group>"; };
+		DF73E2D923F346EE00E24124 /* voxel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = voxel.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +86,7 @@
 			children = (
 				DF73E2CD23F3260100E24124 /* voxel-engine.entitlements */,
 				DF73E2CB23F325A600E24124 /* main.cpp */,
+				DF73E2D923F346EE00E24124 /* voxel.h */,
 				DF73E2D323F32A2C00E24124 /* shader.vs */,
 				DF73E2D423F32A3F00E24124 /* shader.fs */,
 				DF73E2CE23F3268B00E24124 /* shader.h */,
