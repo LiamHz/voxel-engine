@@ -15,6 +15,8 @@
 const GLint WIDTH = 800, HEIGHT = 600;
 
 // Functions
+int init();
+int setup_shaders(Shader shader);
 void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 
@@ -29,43 +31,71 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 float currentFrame;
 
-int main() {
-    glfwInit();
-    
-    // Set OpenGL window to version 3.3
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    
-    // macOS compatibility
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    
-    GLFWwindow *window = glfwCreateWindow(WIDTH, HEIGHT, "OpenGL Test", nullptr, nullptr);
-    
-    // Account for macOS retina resolution
-    int screenWidth, screenHeight;
-    glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
-    
-    if (window == NULL) {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-    
-    glfwMakeContextCurrent(window);
-    glfwSetCursorPosCallback(window, mouse_callback);
-    
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }
+// Misc globals
+GLFWwindow *window;
+unsigned int VBO;
+unsigned int VAO;
+unsigned int texture1;
 
-    glViewport(0, 0, screenWidth, screenHeight);
+int main() {
+    // Initialize GLFW and GLAD
+    if (init() != 0)
+        return -1;
     
-    // Build and compile shaders
     Shader shader("shader.vs", "shader.fs");
     
+    // Initialize GLFW and GLAD
+    if (setup_shaders(shader) != 0)
+        return -1;
+    
+    while (!glfwWindowShouldClose(window)) {
+        // Per-frame time logic
+        currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        
+        processInput(window);
+        
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Bind textures
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture1);
+
+        // Activate shader
+        shader.use();
+
+        // Set projection matrix
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+        shader.setMat4("projection", projection);
+
+        // Set view matrix
+        glm::mat4 view = camera.GetViewMatrix();
+        shader.setMat4("view", view);
+        
+        // Set world coordinates of cube
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+        shader.setMat4("model", model);
+        
+        // Render cube
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        
+        glfwPollEvents();
+        
+        // Use double buffer
+        // Only swap old frame with new when it is completed
+        glfwSwapBuffers(window);
+    }
+    
+    glfwTerminate();
+    
+    return 0;
+}
+
+int setup_shaders(Shader shader) {
     // Define cube vertices
     float vertices[] = {
         // Postion            // TexCoords
@@ -112,8 +142,6 @@ int main() {
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
     
-    unsigned int VBO, VAO;
-    
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     
@@ -127,9 +155,6 @@ int main() {
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    
-    // Load and create textures
-    unsigned int texture1;
 
     // Texture 1
     glGenTextures(1, &texture1);
@@ -149,11 +174,50 @@ int main() {
         glGenerateMipmap(GL_TEXTURE_2D);
     } else {
         std::cout << "Failed to load texture";
+        return -1;
     }
     
     stbi_image_free(data);
     
     shader.setInt("texture1", 0);
+    
+    return 0;
+}
+
+// Initialize GLFW and GLAD
+int init() {
+    glfwInit();
+    
+    // Set OpenGL window to version 3.3
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    
+    // macOS compatibility
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    
+    window = glfwCreateWindow(WIDTH, HEIGHT, "OpenGL Test", nullptr, nullptr);
+    
+    // Account for macOS retina resolution
+    int screenWidth, screenHeight;
+    glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
+    
+    if (window == NULL) {
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+    
+    glfwMakeContextCurrent(window);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
+
+    glViewport(0, 0, screenWidth, screenHeight);
     
     // Enable wireframe mode
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -163,51 +227,6 @@ int main() {
     
     // Enable mouse input
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    
-    while (!glfwWindowShouldClose(window)) {
-        // Per-frame time logic
-        currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-        
-        processInput(window);
-        
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // Bind textures
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture1);
-
-        // Activate shader
-        shader.use();
-
-        // Set projection matrix
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-        shader.setMat4("projection", projection);
-
-        // Set view matrix
-        glm::mat4 view = camera.GetViewMatrix();
-        shader.setMat4("view", view);
-        
-        // Set world coordinates of cube
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(40.0f), glm::vec3(1.0f, 0.3f, 0.5f));
-        shader.setMat4("model", model);
-        
-        // Render cube
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        
-        glfwPollEvents();
-        
-        // Use double buffer
-        // Only swap old frame with new when it is completed
-        glfwSwapBuffers(window);
-    }
-    
-    glfwTerminate();
     
     return 0;
 }
