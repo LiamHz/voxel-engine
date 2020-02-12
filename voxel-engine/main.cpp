@@ -32,11 +32,11 @@ struct chunkVecs {
 int init();
 int processInput(GLFWwindow *window);
 inline int get_self_product(vector<int> x);
-int createTexture(unsigned int textures[8], std::string texPath, int i);
 int set_vertex_attribs(long vboOffset, int nAttrib);
-int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsigned int VBO, vector<vector<int>> &dim, vector<int> &tex);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
-void create_chunk(vector<int> &p, vector<int> &d, int &t, chunkVecs cv);
+void create_chunk(vector<int> p, vector<int> d, int t, chunkVecs &cv);
+int createTexture(unsigned int textures[8], std::string texPath, int i);
+int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsigned int VBO, vector<vector<int>> &dim, vector<int> &tex);
 
 // Camera
 Camera camera(glm::vec3(4.0f, 4.0f, 10.0f));
@@ -53,6 +53,8 @@ float currentFrame;
 GLFWwindow *window;
 
 int main() {
+    int vertOffset;
+    int vertSize;
     int nVerts = 36;
     
     // Initialize GLFW and GLAD
@@ -65,41 +67,21 @@ int main() {
     unsigned int VAO, VBO, textures[8];
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
+    glGenTextures(8, textures);
     vector<vector<int>> dim;
     vector<int> tex;
     
     if (create_scene(shader, textures, VAO, VBO, dim, tex) != 0)
         return -1;
     
-    // Bind textures
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, textures[0]);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, textures[1]);
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, textures[2]);
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, textures[3]);
-    glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_2D, textures[4]);
-    glActiveTexture(GL_TEXTURE5);
-    glBindTexture(GL_TEXTURE_2D, textures[5]);
-    glActiveTexture(GL_TEXTURE6);
-    glBindTexture(GL_TEXTURE_2D, textures[6]);
-    glActiveTexture(GL_TEXTURE7);
-    glBindTexture(GL_TEXTURE_2D, textures[7]);
-    
     // Set origin world coordinates
     shader.use();
     glm::mat4 model = glm::mat4(1.0f);
     shader.setMat4("model", model);
     
-    int vertOffset;
-    int prevVertOffset;
-    
     while (!glfwWindowShouldClose(window)) {
+        vertSize = 0;
         vertOffset = 0;
-        prevVertOffset = 0;
         
         // Per-frame time logic
         currentFrame = glfwGetTime();
@@ -123,11 +105,11 @@ int main() {
         glBindVertexArray(VAO);
         
         // Render each object in VBO with its associated texture
-        for (int i = 0; i < dim.size(); i++){
-            vertOffset += get_self_product(dim[i]) * nVerts;
+        for (int i = 0; i < dim.size(); i++) {
+            vertSize = get_self_product(dim[i]) * nVerts;
             shader.setInt("u_texture", tex[i]);
-            glDrawArrays(GL_TRIANGLES, prevVertOffset, vertOffset);
-            prevVertOffset = vertOffset;
+            glDrawArrays(GL_TRIANGLES, vertOffset, vertSize);
+            vertOffset += vertSize;
         }
         
         glfwPollEvents();
@@ -148,7 +130,7 @@ inline int get_self_product(vector<int> x) {
     return x[0] * x[1] * x[2];
 }
 
-void create_chunk(vector<int> p, vector<int> d, int t, chunkVecs cv){
+void create_chunk(vector<int> p, vector<int> d, int t, chunkVecs &cv){
     cv.pos.push_back(p);
     cv.dim.push_back(d);
     cv.tex.push_back(t);
@@ -159,6 +141,7 @@ int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsi
     long vboOffset = 0;
     vector<vector<int>> pos;
     chunkVecs cv(pos, dim, tex);
+    chunkInfo ci(VBO, vboOffset, 0);
     
     // Allocate VBO memory
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -169,11 +152,10 @@ int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsi
     createTexture(textures, "container.jpg", 0);
     createTexture(textures, "stone_iron.png", 1);
     
-    chunkInfo ci(VBO, vboOffset, 0);
-    
     create_chunk({ 0,  0,  0}, { 8,  1,  8}, 1, cv);
     create_chunk({ 0,  0,  0}, { 1,  5,  1}, 0, cv);
     create_chunk({ 7,  0,  0}, { 1,  5,  1}, 0, cv);
+    create_chunk({ 6,  0,  0}, { 1,  7,  1}, 1, cv);
     
     for (int i = 0; i < dim.size(); i++)
         draw_chunk(pos[i], dim[i], ci);
@@ -182,7 +164,10 @@ int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsi
 }
 
 int createTexture(unsigned int textures[8], std::string texPath, int i) {
-    glGenTextures(1, &textures[i]);
+    if (i == 0)
+        glActiveTexture(GL_TEXTURE0);
+    else if (i == 1)
+        glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, textures[i]);
 
     // Set texture wrapping and filtering options
