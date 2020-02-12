@@ -8,13 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		DF1ED99623F380B900CF963E /* stone_iron.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF1ED99523F380B900CF963E /* stone_iron.png */; };
+		DF1ED99E23F4B91600CF963E /* lampShader.vs in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF1ED99C23F4B5F200CF963E /* lampShader.vs */; };
+		DF1ED99F23F4B91600CF963E /* lampShader.fs in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF1ED99D23F4B5FD00CF963E /* lampShader.fs */; };
 		DF73E2C623F3252500E24124 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF73E2C523F3252500E24124 /* OpenGL.framework */; };
 		DF73E2C823F3257000E24124 /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF73E2C723F3257000E24124 /* libglfw.3.3.dylib */; };
 		DF73E2CA23F3258400E24124 /* libGLEW.2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF73E2C923F3258400E24124 /* libGLEW.2.1.0.dylib */; };
 		DF73E2CC23F325A600E24124 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF73E2CB23F325A600E24124 /* main.cpp */; };
 		DF73E2D123F326DF00E24124 /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = DF73E2D023F326DF00E24124 /* glad.c */; };
-		DF73E2D523F32CC500E24124 /* shader.vs in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF73E2D323F32A2C00E24124 /* shader.vs */; };
-		DF73E2D623F32CC500E24124 /* shader.fs in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF73E2D423F32A3F00E24124 /* shader.fs */; };
+		DF73E2D523F32CC500E24124 /* objectShader.vs in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF73E2D323F32A2C00E24124 /* objectShader.vs */; };
+		DF73E2D623F32CC500E24124 /* objectShader.fs in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF73E2D423F32A3F00E24124 /* objectShader.fs */; };
 		DF73E2D823F32D3B00E24124 /* container.jpg in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF73E2D723F32D3B00E24124 /* container.jpg */; };
 /* End PBXBuildFile section */
 
@@ -25,10 +27,12 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				DF1ED99E23F4B91600CF963E /* lampShader.vs in CopyFiles */,
+				DF1ED99F23F4B91600CF963E /* lampShader.fs in CopyFiles */,
 				DF1ED99623F380B900CF963E /* stone_iron.png in CopyFiles */,
 				DF73E2D823F32D3B00E24124 /* container.jpg in CopyFiles */,
-				DF73E2D523F32CC500E24124 /* shader.vs in CopyFiles */,
-				DF73E2D623F32CC500E24124 /* shader.fs in CopyFiles */,
+				DF73E2D523F32CC500E24124 /* objectShader.vs in CopyFiles */,
+				DF73E2D623F32CC500E24124 /* objectShader.fs in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -36,6 +40,8 @@
 
 /* Begin PBXFileReference section */
 		DF1ED99523F380B900CF963E /* stone_iron.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stone_iron.png; path = "voxel-engine/stone_iron.png"; sourceTree = "<group>"; };
+		DF1ED99C23F4B5F200CF963E /* lampShader.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = lampShader.vs; sourceTree = "<group>"; };
+		DF1ED99D23F4B5FD00CF963E /* lampShader.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = lampShader.fs; sourceTree = "<group>"; };
 		DF73E2BA23F3250E00E24124 /* voxel-engine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "voxel-engine"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF73E2C523F3252500E24124 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		DF73E2C723F3257000E24124 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../../usr/local/Cellar/glfw/3.3.2/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
@@ -46,8 +52,8 @@
 		DF73E2CF23F326B000E24124 /* camera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = camera.h; sourceTree = "<group>"; };
 		DF73E2D023F326DF00E24124 /* glad.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = glad.c; sourceTree = "<group>"; };
 		DF73E2D223F327CB00E24124 /* stb_image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
-		DF73E2D323F32A2C00E24124 /* shader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; path = shader.vs; sourceTree = "<group>"; };
-		DF73E2D423F32A3F00E24124 /* shader.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; path = shader.fs; sourceTree = "<group>"; };
+		DF73E2D323F32A2C00E24124 /* objectShader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; path = objectShader.vs; sourceTree = "<group>"; };
+		DF73E2D423F32A3F00E24124 /* objectShader.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; path = objectShader.fs; sourceTree = "<group>"; };
 		DF73E2D723F32D3B00E24124 /* container.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = container.jpg; path = "voxel-engine/container.jpg"; sourceTree = "<group>"; };
 		DF73E2D923F346EE00E24124 /* voxel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = voxel.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -91,8 +97,10 @@
 				DF73E2CD23F3260100E24124 /* voxel-engine.entitlements */,
 				DF73E2CB23F325A600E24124 /* main.cpp */,
 				DF73E2D923F346EE00E24124 /* voxel.h */,
-				DF73E2D323F32A2C00E24124 /* shader.vs */,
-				DF73E2D423F32A3F00E24124 /* shader.fs */,
+				DF1ED99C23F4B5F200CF963E /* lampShader.vs */,
+				DF1ED99D23F4B5FD00CF963E /* lampShader.fs */,
+				DF73E2D323F32A2C00E24124 /* objectShader.vs */,
+				DF73E2D423F32A3F00E24124 /* objectShader.fs */,
 				DF73E2CE23F3268B00E24124 /* shader.h */,
 				DF73E2D223F327CB00E24124 /* stb_image.h */,
 				DF73E2CF23F326B000E24124 /* camera.h */,

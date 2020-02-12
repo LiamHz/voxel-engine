@@ -12,54 +12,54 @@ struct chunkInfo {
 
 std::vector<float> get_cube(int x, int y, int z) {
     float vertices[] = {
-        // Postion         // TexCoords
-        0.0f, 0.0f, 0.0f,  0.0f, 0.0f,
-        1.0f, 0.0f, 0.0f,  1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,  1.0f, 1.0f,
-        1.0f, 1.0f, 0.0f,  1.0f, 1.0f,
-        0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
-        0.0f, 0.0f, 0.0f,  0.0f, 0.0f,
+        // Postion          // Surface normals
+        0.0f, 0.0f, 0.0f,   0.0f,  0.0f, -1.0f,
+        1.0f, 0.0f, 0.0f,   0.0f,  0.0f, -1.0f,
+        1.0f, 1.0f, 0.0f,   0.0f,  0.0f, -1.0f,
+        1.0f, 1.0f, 0.0f,   0.0f,  0.0f, -1.0f,
+        0.0f, 1.0f, 0.0f,   0.0f,  0.0f, -1.0f,
+        0.0f, 0.0f, 0.0f,   0.0f,  0.0f, -1.0f,
         
-        0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
-        1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
-        1.0f, 1.0f, 1.0f,  1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,  1.0f, 1.0f,
-        0.0f, 1.0f, 1.0f,  0.0f, 1.0f,
-        0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f,   0.0f,  0.0f, 1.0f,
+        1.0f, 0.0f, 1.0f,   0.0f,  0.0f, 1.0f,
+        1.0f, 1.0f, 1.0f,   0.0f,  0.0f, 1.0f,
+        1.0f, 1.0f, 1.0f,   0.0f,  0.0f, 1.0f,
+        0.0f, 1.0f, 1.0f,   0.0f,  0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f,   0.0f,  0.0f, 1.0f,
         
-        0.0f, 1.0f, 1.0f,  1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,  1.0f, 1.0f,
-        0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
-        0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
-        0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
-        0.0f, 1.0f, 1.0f,  1.0f, 0.0f,
+        0.0f, 1.0f, 1.0f,   1.0f,  0.0f,  0.0f,
+        0.0f, 1.0f, 0.0f,   1.0f,  0.0f,  0.0f,
+        0.0f, 0.0f, 0.0f,   1.0f,  0.0f,  0.0f,
+        0.0f, 0.0f, 0.0f,   1.0f,  0.0f,  0.0f,
+        0.0f, 0.0f, 1.0f,   1.0f,  0.0f,  0.0f,
+        0.0f, 1.0f, 1.0f,   1.0f,  0.0f,  0.0f,
         
-        1.0f, 1.0f, 1.0f,  1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,  1.0f, 1.0f,
-        1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
-        1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
-        1.0f, 0.0f, 1.0f,  0.0f, 0.0f,
-        1.0f, 1.0f, 1.0f,  1.0f, 0.0f,
+        1.0f, 1.0f, 1.0f,   1.0f,  0.0f,  0.0f,
+        1.0f, 1.0f, 0.0f,   1.0f,  0.0f,  0.0f,
+        1.0f, 0.0f, 0.0f,   1.0f,  0.0f,  0.0f,
+        1.0f, 0.0f, 0.0f,   1.0f,  0.0f,  0.0f,
+        1.0f, 0.0f, 1.0f,   1.0f,  0.0f,  0.0f,
+        1.0f, 1.0f, 1.0f,   1.0f,  0.0f,  0.0f,
         
-        0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
-        1.0f, 0.0f, 0.0f,  1.0f, 1.0f,
-        1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
-        1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
-        0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
-        0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+        0.0f, 0.0f, 0.0f,   0.0f, -1.0f,  0.0f,
+        1.0f, 0.0f, 0.0f,   0.0f, -1.0f,  0.0f,
+        1.0f, 0.0f, 1.0f,   0.0f, -1.0f,  0.0f,
+        1.0f, 0.0f, 1.0f,   0.0f, -1.0f,  0.0f,
+        0.0f, 0.0f, 1.0f,   0.0f, -1.0f,  0.0f,
+        0.0f, 0.0f, 0.0f,   0.0f, -1.0f,  0.0f,
         
-        0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
-        1.0f, 1.0f, 0.0f,  1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,  1.0f, 0.0f,
-        1.0f, 1.0f, 1.0f,  1.0f, 0.0f,
-        0.0f, 1.0f, 1.0f,  0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+        0.0f, 1.0f, 0.0f,   0.0f,  1.0f,  0.0f,
+        1.0f, 1.0f, 0.0f,   0.0f,  1.0f,  0.0f,
+        1.0f, 1.0f, 1.0f,   0.0f,  1.0f,  0.0f,
+        1.0f, 1.0f, 1.0f,   0.0f,  1.0f,  0.0f,
+        0.0f, 1.0f, 1.0f,   0.0f,  1.0f,  0.0f,
+        0.0f, 1.0f, 0.0f,   0.0f,  1.0f,  0.0f
     };
     
     std::vector<float> cube;
     int arrSize = sizeof(vertices)/sizeof(float);
     for (int i = 0; i < arrSize; i++) {
-        int r = i % 5;
+        int r = i % 6;
         cube.push_back((r == 0) ? vertices[i] + x :
                        (r == 1) ? vertices[i] + y :
                        (r == 2) ? vertices[i] + z :
@@ -85,9 +85,9 @@ std::vector<float> get_chunk(int x, int y, int z, int length, int width, int hei
 
 int set_vertex_attribs(long vboOffset, int nAttrib) {
     // Configure vertex position and texture attributes
-    glVertexAttribPointer(nAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(vboOffset));
+    glVertexAttribPointer(nAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(vboOffset));
     glEnableVertexAttribArray(nAttrib);
-    glVertexAttribPointer(nAttrib+1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(vboOffset + 3 * sizeof(float)));
+    glVertexAttribPointer(nAttrib+1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(vboOffset + 3 * sizeof(float)));
     glEnableVertexAttribArray(nAttrib+1);
     
     return 0;

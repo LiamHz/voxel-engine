@@ -65,24 +65,41 @@ int main() {
     if (init() != 0)
         return -1;
     
-    Shader shader("shader.vs", "shader.fs");
+    Shader objectShader("objectShader.vs", "objectShader.fs");
+    Shader lampShader("lampShader.vs", "lampShader.fs");
     
     // Create voxel chunks
-    unsigned int VAO, VBO, textures[8];
+    unsigned int VAO, VBO, textures[8], lightVAO, lightVBO;
     glGenBuffers(1, &VBO);
+    glGenBuffers(1, &lightVBO);
     glGenVertexArrays(1, &VAO);
+    glGenVertexArrays(1, &lightVAO);
     glGenTextures(8, textures);
     vector<vector<int>> dim;
     vector<int> tex;
     std::vector<glm::vec3> palette;
     
-    if (create_scene(shader, textures, VAO, VBO, dim, tex, palette) != 0)
+    if (create_scene(objectShader, textures, VAO, VBO, dim, tex, palette) != 0)
         return -1;
     
     // Set origin world coordinates
-    shader.use();
     glm::mat4 model = glm::mat4(1.0f);
-    shader.setMat4("model", model);
+    objectShader.use();
+    objectShader.setMat4("model", model);
+    
+    // Lighting
+    glm::vec3 lightPos(-10.0f, 20.0f, -15.0f);
+    objectShader.setVec3("u_lightColor", 1.0f, 1.0f, 1.0f);
+    objectShader.setVec3("u_lightPos", lightPos);
+    objectShader.setMat4("model", model);
+    
+    std::vector<float> lightCube = get_cube(0, 0, 0);
+    
+    glBindVertexArray(lightVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, lightVBO);
+    glBufferData(GL_ARRAY_BUFFER, lightCube.size() * sizeof(float), lightCube.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
     
     while (!glfwWindowShouldClose(window)) {
         vertSize = 0;
@@ -94,29 +111,40 @@ int main() {
         lastFrame = currentFrame;
         
         processInput(window);
-        shader.use();
+        objectShader.use();
         
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Set projection matrix
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-        shader.setMat4("projection", projection);
+        objectShader.setMat4("projection", projection);
 
         // Set view matrix
         glm::mat4 view = camera.GetViewMatrix();
-        shader.setMat4("view", view);
+        objectShader.setMat4("view", view);
         
         glBindVertexArray(VAO);
         
         // Render each object in VBO with its associated texture
         for (int i = 0; i < dim.size(); i++) {
             vertSize = get_self_product(dim[i]) * nVerts;
-//             shader.setInt("u_texture", tex[i]);
-            shader.setVec3("u_color", palette[tex[i]]);
+            objectShader.setVec3("u_objectColor", palette[tex[i]]);
             glDrawArrays(GL_TRIANGLES, vertOffset, vertSize);
             vertOffset += vertSize;
         }
+        
+        // Draw lamp
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.2f));
+        
+        lampShader.use();
+        lampShader.setMat4("projection", projection);
+        lampShader.setMat4("view", view);
+        lampShader.setMat4("model", model);
+        glBindVertexArray(lightVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         
         glfwPollEvents();
         
@@ -218,16 +246,16 @@ int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsi
     create_pepperoni(-1, -7, 1, cv);
     create_pepperoni( 2,-16, 1, cv);
     create_pepperoni(-6,-21, 1, cv);
-    
+
     // Peppers
     create_pepper_r( 3, -12, 2, cv);
     create_pepper_l(-6, -18, 2, cv);
     create_pepper_l( 4, -24, 2, cv);
-    
+
     // Olive
     create_olive(-3, -14, 3, cv);
     create_olive( 0, -27, 3, cv);
-    
+
     // Crust
     // Left
     create_chunk({-11, 0, -28}, {2, 2, 1}, 4, cv);
@@ -305,7 +333,7 @@ int init() {
     // macOS compatibility
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     
-    window = glfwCreateWindow(WIDTH, HEIGHT, "OpenGL Test", nullptr, nullptr);
+    window = glfwCreateWindow(WIDTH, HEIGHT, "Voxel Engine", nullptr, nullptr);
     
     // Account for macOS retina resolution
     int screenWidth, screenHeight;
