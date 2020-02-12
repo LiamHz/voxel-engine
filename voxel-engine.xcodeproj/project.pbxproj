@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DF1ED99623F380B900CF963E /* stone_iron.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF1ED99523F380B900CF963E /* stone_iron.png */; };
 		DF73E2C623F3252500E24124 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF73E2C523F3252500E24124 /* OpenGL.framework */; };
 		DF73E2C823F3257000E24124 /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF73E2C723F3257000E24124 /* libglfw.3.3.dylib */; };
 		DF73E2CA23F3258400E24124 /* libGLEW.2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF73E2C923F3258400E24124 /* libGLEW.2.1.0.dylib */; };
@@ -24,6 +25,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				DF1ED99623F380B900CF963E /* stone_iron.png in CopyFiles */,
 				DF73E2D823F32D3B00E24124 /* container.jpg in CopyFiles */,
 				DF73E2D523F32CC500E24124 /* shader.vs in CopyFiles */,
 				DF73E2D623F32CC500E24124 /* shader.fs in CopyFiles */,
@@ -33,6 +35,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DF1ED99523F380B900CF963E /* stone_iron.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stone_iron.png; path = "voxel-engine/stone_iron.png"; sourceTree = "<group>"; };
 		DF73E2BA23F3250E00E24124 /* voxel-engine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "voxel-engine"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF73E2C523F3252500E24124 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		DF73E2C723F3257000E24124 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../../usr/local/Cellar/glfw/3.3.2/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
@@ -66,6 +69,7 @@
 		DF73E2B123F3250E00E24124 = {
 			isa = PBXGroup;
 			children = (
+				DF1ED99523F380B900CF963E /* stone_iron.png */,
 				DF73E2D723F32D3B00E24124 /* container.jpg */,
 				DF73E2BC23F3250E00E24124 /* voxel-engine */,
 				DF73E2BB23F3250E00E24124 /* Products */,
