@@ -36,6 +36,7 @@ int set_vertex_attribs(long vboOffset, int nAttrib);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void create_chunk(vector<int> p, vector<int> d, int t, chunkVecs &cv);
 int createTexture(unsigned int textures[8], std::string texPath, int i);
+void add_rgb_to_palette(std::vector<glm::vec3> &palette, int r, int g, int b);
 int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsigned int VBO, vector<vector<int>> &dim, vector<int> &tex);
 
 // Camera
@@ -79,6 +80,12 @@ int main() {
     glm::mat4 model = glm::mat4(1.0f);
     shader.setMat4("model", model);
     
+    // Color palette
+    std::vector<glm::vec3> v_colors;
+    
+    add_rgb_to_palette(v_colors, 253, 253, 150);
+    add_rgb_to_palette(v_colors, 153, 153, 150);
+    
     while (!glfwWindowShouldClose(window)) {
         vertSize = 0;
         vertOffset = 0;
@@ -107,7 +114,8 @@ int main() {
         // Render each object in VBO with its associated texture
         for (int i = 0; i < dim.size(); i++) {
             vertSize = get_self_product(dim[i]) * nVerts;
-            shader.setInt("u_texture", tex[i]);
+            // shader.setInt("u_texture", tex[i]);
+            shader.setVec3("u_color", v_colors[tex[i]]);
             glDrawArrays(GL_TRIANGLES, vertOffset, vertSize);
             vertOffset += vertSize;
         }
@@ -130,6 +138,10 @@ inline int get_self_product(vector<int> x) {
     return x[0] * x[1] * x[2];
 }
 
+void add_rgb_to_palette(std::vector<glm::vec3> &palette, int r, int g, int b) {
+    palette.push_back(glm::vec3(r / 255.0f, g / 255.0f, b / 255.0f));
+}
+
 void create_chunk(vector<int> p, vector<int> d, int t, chunkVecs &cv){
     cv.pos.push_back(p);
     cv.dim.push_back(d);
@@ -149,8 +161,8 @@ int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsi
     
     glBindVertexArray(VAO);
     
-    createTexture(textures, "container.jpg", 0);
-    createTexture(textures, "stone_iron.png", 1);
+//    createTexture(textures, "container.jpg", 0);
+//    createTexture(textures, "stone_iron.png", 1);
     
     create_chunk({ 0,  0,  0}, { 8,  1,  8}, 1, cv);
     create_chunk({ 0,  0,  0}, { 1,  5,  1}, 0, cv);
