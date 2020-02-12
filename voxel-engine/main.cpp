@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cmath>
+#include <numeric>
+#include <functional>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -13,18 +15,31 @@
 #include "camera.h"
 #include "voxel.h"
 
+using std::vector;
+
 const GLint WIDTH = 1920, HEIGHT = 1080;
+
+// Structs
+struct chunkVecs {
+    vector<vector<int>> &pos;
+    vector<vector<int>> &dim;
+    vector<int> &tex;
+    chunkVecs(vector<vector<int>> &_pos, vector<vector<int>> &_dim, vector<int> &_tex)
+              : pos(_pos), dim(_dim), tex(_tex) {}
+};
 
 // Functions
 int init();
 int processInput(GLFWwindow *window);
+inline int get_self_product(vector<int> x);
 int createTexture(unsigned int textures[8], std::string texPath, int i);
-int set_vertex_attribs(Shader shader, long vboOffset, int nAttrib);
-int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsigned int VBO);
+int set_vertex_attribs(long vboOffset, int nAttrib);
+int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsigned int VBO, vector<vector<int>> &dim, vector<int> &tex);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
+void create_chunk(vector<int> &p, vector<int> &d, int &t, chunkVecs cv);
 
 // Camera
-Camera camera(glm::vec3(0.0f, 0.0f,  3.0f));
+Camera camera(glm::vec3(4.0f, 4.0f, 10.0f));
 bool firstMouse = true;
 float lastX = WIDTH / 2;
 float lastY = HEIGHT / 2;
@@ -36,7 +51,6 @@ float currentFrame;
 
 // Misc globals
 GLFWwindow *window;
-unsigned int texture1;
 
 int main() {
     int nVerts = 36;
@@ -51,16 +65,49 @@ int main() {
     unsigned int VAO, VBO, textures[8];
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
-    if (create_scene(shader, textures, VAO, VBO) != 0)
+    vector<vector<int>> dim;
+    vector<int> tex;
+    
+    if (create_scene(shader, textures, VAO, VBO, dim, tex) != 0)
         return -1;
     
+    // Bind textures
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, textures[2]);
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, textures[3]);
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, textures[4]);
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, textures[5]);
+    glActiveTexture(GL_TEXTURE6);
+    glBindTexture(GL_TEXTURE_2D, textures[6]);
+    glActiveTexture(GL_TEXTURE7);
+    glBindTexture(GL_TEXTURE_2D, textures[7]);
+    
+    // Set origin world coordinates
+    shader.use();
+    glm::mat4 model = glm::mat4(1.0f);
+    shader.setMat4("model", model);
+    
+    int vertOffset;
+    int prevVertOffset;
+    
     while (!glfwWindowShouldClose(window)) {
+        vertOffset = 0;
+        prevVertOffset = 0;
+        
         // Per-frame time logic
         currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         
         processInput(window);
+        shader.use();
         
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -73,28 +120,15 @@ int main() {
         glm::mat4 view = camera.GetViewMatrix();
         shader.setMat4("view", view);
         
-        // Set world coordinates of cube
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-        shader.setMat4("model", model);
-        
-        // Render objects
         glBindVertexArray(VAO);
         
-        // Bind textures
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textures[0]);
-        shader.setInt("texture1", 0);
-        shader.use();
-        
-        glDrawArrays(GL_TRIANGLES, 0, 2*nVerts);
-        
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, textures[1]);
-        shader.setInt("texture1", 1);
-        shader.use();
-        
-        glDrawArrays(GL_TRIANGLES, 2*nVerts, 9*nVerts);
+        // Render each object in VBO with its associated texture
+        for (int i = 0; i < dim.size(); i++){
+            vertOffset += get_self_product(dim[i]) * nVerts;
+            shader.setInt("u_texture", tex[i]);
+            glDrawArrays(GL_TRIANGLES, prevVertOffset, vertOffset);
+            prevVertOffset = vertOffset;
+        }
         
         glfwPollEvents();
         
@@ -110,11 +144,23 @@ int main() {
     return 0;
 }
 
-int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsigned int VBO) {
+inline int get_self_product(vector<int> x) {
+    return x[0] * x[1] * x[2];
+}
+
+void create_chunk(vector<int> p, vector<int> d, int t, chunkVecs cv){
+    cv.pos.push_back(p);
+    cv.dim.push_back(d);
+    cv.tex.push_back(t);
+}
+
+int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsigned int VBO, vector<vector<int>> &dim, vector<int> &tex) {
+    int nCubes = 144;
     long vboOffset = 0;
+    vector<vector<int>> pos;
+    chunkVecs cv(pos, dim, tex);
     
     // Allocate VBO memory
-    int nCubes = 11;
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, nCubes * sizeof(float) * 180, 0, GL_STATIC_DRAW);
     
@@ -123,21 +169,14 @@ int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsi
     createTexture(textures, "container.jpg", 0);
     createTexture(textures, "stone_iron.png", 1);
     
-    set_vertex_attribs(shader, vboOffset, 0);
-    draw_chunk(-2, 0, -3, 1, 2, 1, VBO, vboOffset);
+    chunkInfo ci(VBO, vboOffset, 0);
     
-    set_vertex_attribs(shader, vboOffset, 2);
-    draw_chunk( 0, 1, -1, 3, 3, 1, VBO, vboOffset);
+    create_chunk({ 0,  0,  0}, { 8,  1,  8}, 1, cv);
+    create_chunk({ 0,  0,  0}, { 1,  5,  1}, 0, cv);
+    create_chunk({ 7,  0,  0}, { 1,  5,  1}, 0, cv);
     
-    return 0;
-}
-
-int set_vertex_attribs(Shader shader, long vboOffset, int nAttrib) {
-    // Configure vertex position and texture attributes
-    glVertexAttribPointer(nAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(vboOffset));
-    glEnableVertexAttribArray(nAttrib);
-    glVertexAttribPointer(nAttrib+1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(vboOffset + 3 * sizeof(float)));
-    glEnableVertexAttribArray(nAttrib+1);
+    for (int i = 0; i < dim.size(); i++)
+        draw_chunk(pos[i], dim[i], ci);
     
     return 0;
 }
@@ -156,6 +195,7 @@ int createTexture(unsigned int textures[8], std::string texPath, int i) {
     int texWidth, texHeight, nrChannels;
     unsigned char *data = stbi_load(texPath.c_str(), &texWidth, &texHeight, &nrChannels, 0);
     if (data) {
+        // Handle multiple image formats
         if (texPath.find(".jpg") != std::string::npos) {
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texWidth, texHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         } else if (texPath.find(".png") != std::string::npos) {
@@ -170,8 +210,6 @@ int createTexture(unsigned int textures[8], std::string texPath, int i) {
     }
 
     stbi_image_free(data);
-
-//    shader.setInt("texture"+std::to_string(i), 0);
     
     return 0;
 }
