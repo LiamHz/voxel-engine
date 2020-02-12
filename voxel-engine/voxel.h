@@ -74,4 +74,14 @@ std::vector<float> get_chunk(int x, int y, int z, int length, int width, int hei
     return chunk;
 }
 
+void draw_chunk(int x, int y, int z, int length, int width, int height, unsigned int VBO, long &vboOffset) {
+    std::vector<float> chunk;
+    chunk = get_chunk(x, y, z, length, width, height);
+    
+    long chunkMemSize = chunk.size() * sizeof(float);
+    glBufferSubData(GL_ARRAY_BUFFER, vboOffset, chunkMemSize, chunk.data());
+    
+    vboOffset += chunkMemSize;
+}
+
 #endif

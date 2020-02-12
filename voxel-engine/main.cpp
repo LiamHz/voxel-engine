@@ -17,8 +17,9 @@ const GLint WIDTH = 1920, HEIGHT = 1080;
 
 // Functions
 int init();
-int setup_shaders(Shader shader);
-void processInput(GLFWwindow *window);
+int processInput(GLFWwindow *window);
+int set_vertex_attribs(Shader shader);
+int create_scene(Shader shader, unsigned int VAO, unsigned int VBO);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 
 // Camera
@@ -34,8 +35,6 @@ float currentFrame;
 
 // Misc globals
 GLFWwindow *window;
-unsigned int VBO;
-unsigned int VAO;
 unsigned int texture1;
 
 int main() {
@@ -45,8 +44,11 @@ int main() {
     
     Shader shader("shader.vs", "shader.fs");
     
-    // Initialize GLFW and GLAD
-    if (setup_shaders(shader) != 0)
+    // Create voxel chunks
+    unsigned int VAO, VBO;
+    glGenBuffers(1, &VBO);
+    glGenVertexArrays(1, &VAO);
+    if (create_scene(shader, VAO, VBO) != 0)
         return -1;
     
     while (!glfwWindowShouldClose(window)) {
@@ -82,7 +84,7 @@ int main() {
         
         // Render cube
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 2700);
+        glDrawArrays(GL_TRIANGLES, 0, 1000);
         
         glfwPollEvents();
         
@@ -90,26 +92,33 @@ int main() {
         // Only swap old frame with new when it is completed
         glfwSwapBuffers(window);
     }
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
     
     glfwTerminate();
     
     return 0;
 }
 
-int setup_shaders(Shader shader) {
-    // std::vector<float> vertices;
-    std::vector<float> chunk;
-    // vertices = get_cube(1, 0, 0);
-    chunk = get_chunk(0, 0, 0, 3, 3, 3);
+int create_scene(Shader shader, unsigned int VAO, unsigned int VBO) {
+    int nCubes = 11;
+    long vboOffset = 0;
     
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    // Allocate VBO memory
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, nCubes * sizeof(float) * 180, 0, GL_STATIC_DRAW);
     
     glBindVertexArray(VAO);
     
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, chunk.size() * sizeof(float), chunk.data(), GL_STATIC_DRAW);
+    draw_chunk(-2, 0, -3, 1, 2, 1, VBO, vboOffset);
+    draw_chunk( 0, 1, -1, 3, 3, 1, VBO, vboOffset);
+
+    set_vertex_attribs(shader);
     
+    return 0;
+}
+
+int set_vertex_attribs(Shader shader) {
     // Configure vertex position and texture attributes
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -127,18 +136,18 @@ int setup_shaders(Shader shader) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     // Load and generate texture
-    int width, height, nrChannels;
-    unsigned char *data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+    int texWidth, texHeight, nrChannels;
+    unsigned char *data = stbi_load("container.jpg", &texWidth, &texHeight, &nrChannels, 0);
     if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texWidth, texHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     } else {
         std::cout << "Failed to load texture";
         return -1;
     }
-    
+
     stbi_image_free(data);
-    
+
     shader.setInt("texture1", 0);
     
     return 0;
@@ -191,7 +200,7 @@ int init() {
     return 0;
 }
 
-void processInput(GLFWwindow *window) {
+int processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
     
@@ -203,6 +212,8 @@ void processInput(GLFWwindow *window) {
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+    
+    return 0;
 }
 
 void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
