@@ -69,14 +69,14 @@ std::vector<float> get_cube(int x, int y, int z) {
     return cube;
 }
 
-std::vector<float> get_chunk(int x, int y, int z, int length, int width, int height) {
+std::vector<float> get_chunk(int x, int y, int z, int length, int height, int width) {
     std::vector<float> chunk;
     std::vector<float> cube;
     
     for (int l = 0; l < length; l++)
-        for (int w = 0; w < width; w++)
-            for (int h = 0; h < height; h++) {
-                cube = get_cube(x + l, y + w, z + h);
+        for (int h = 0; h < height; h++)
+            for (int w = 0; w < width; w++) {
+                cube = get_cube(x + l, y + h, z + w);
                 chunk.insert(chunk.end(), cube.begin(), cube.end());
             }
     

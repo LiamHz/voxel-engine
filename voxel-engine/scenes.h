@@ -13,16 +13,22 @@ struct chunkVecs {
 };
 
 // Functions
-void draw_pizza(chunkVecs &cv);
+void create_chunk(vector<int> p, vector<int> d, int t, chunkVecs &cv);
+void add_rgb_to_palette(std::vector<glm::vec3> &palette, int r, int g, int b);
+
+void draw_king(chunkVecs &cv, std::vector<glm::vec3> &palette);
+void draw_pizza(chunkVecs &cv, std::vector<glm::vec3> &palette);
+
 void create_olive(int x, int z, int t, chunkVecs cv);
 void create_pepper_r(int x, int z, int t, chunkVecs cv);
 void create_pepper_l(int x, int z, int t, chunkVecs cv);
 void create_pepperoni(int x, int z, int t, chunkVecs cv);
-void create_chunk(vector<int> p, vector<int> d, int t, chunkVecs &cv);
 
-void draw_scene(std::string sceneName, chunkVecs &cv) {
-    (sceneName == "pizza") ? draw_pizza(cv)
-                           : draw_pizza(cv);
+void draw_scene(std::string sceneName, chunkVecs &cv, std::vector<glm::vec3> &palette) {
+    if (sceneName == "pizza")
+        draw_pizza(cv, palette);
+    else if (sceneName == "king")
+        draw_king(cv, palette);
 }
 
 void create_chunk(vector<int> p, vector<int> d, int t, chunkVecs &cv){
@@ -31,9 +37,75 @@ void create_chunk(vector<int> p, vector<int> d, int t, chunkVecs &cv){
     cv.col.push_back(t);
 }
 
-void draw_pizza(chunkVecs &cv) {
+void add_rgb_to_palette(std::vector<glm::vec3> &palette, int r, int g, int b) {
+    palette.push_back(glm::vec3(r / 255.0f, g / 255.0f, b / 255.0f));
+}
+
+void draw_king(chunkVecs &cv, std::vector<glm::vec3> &palette) {
+    add_rgb_to_palette(palette, 128,   0,   0);
+    add_rgb_to_palette(palette, 155,  28,  49);
+    add_rgb_to_palette(palette, 255, 255, 255);
+    add_rgb_to_palette(palette, 255, 229, 180);
+    add_rgb_to_palette(palette, 250, 218,  94);
+    
+    // Left leg
+    create_chunk({0, 0, 0}, {1, 1, 1}, 0, cv);
+    create_chunk({0, 1, 0}, {1, 2, 1}, 1, cv);
+    
+    // Right leg
+    create_chunk({3, 0, 0}, {1, 1, 1}, 0, cv);
+    create_chunk({3, 1, 0}, {1, 2, 1}, 1, cv);
+    
+    // Torso
+    create_chunk({-1, 3, -1}, {6, 1, 3}, 1, cv);
+    create_chunk({-1, 4, -1}, {6, 1, 3}, 0, cv);
+    create_chunk({-1, 5, -1}, {6, 3, 3}, 1, cv);
+    
+    // Beard
+    create_chunk({ 1, 6,  2}, {2, 2, 1}, 2, cv);
+    create_chunk({ 1, 8, -1}, {2, 1, 4}, 2, cv);
+    create_chunk({ 1,10, -1}, {2, 1, 3}, 2, cv);
+    
+    // Face
+    create_chunk({ 1, 9, -1}, {2, 1, 3}, 3, cv);
+    
+    // Crown
+    create_chunk({ 1,10,  2}, {2, 1, 1}, 4, cv);
+    create_chunk({ 1,10, -2}, {2, 1, 1}, 4, cv);
+    create_chunk({ 0,10, -1}, {1, 1, 3}, 4, cv);
+    create_chunk({ 3,10, -1}, {1, 1, 3}, 4, cv);
+    create_chunk({ 0,11, -1}, {1, 1, 1}, 4, cv);
+    create_chunk({ 3,11, -1}, {1, 1, 1}, 4, cv);
+    create_chunk({ 0,11,  1}, {1, 1, 1}, 4, cv);
+    create_chunk({ 3,11,  1}, {1, 1, 1}, 4, cv);
+    
+    // Left arm
+    create_chunk({ -2, 5, 0}, {1, 2, 1}, 1, cv);
+//    create_chunk({ -3, 5, 0}, {1, 1, 1}, 1, cv);
+    create_chunk({ -2, 4, 0}, {1, 1, 1}, 3, cv);
+    
+    // Right arm
+    create_chunk({  5, 6, 0}, {1, 1, 1}, 1, cv);
+    create_chunk({  6, 5, 0}, {1, 1, 1}, 1, cv);
+    create_chunk({  6, 4, 0}, {1, 1, 1}, 3, cv);
+    
+    // Cape
+    create_chunk({ -2, 0,-2}, {8, 2, 1}, 0, cv);
+    create_chunk({  0, 0,-3}, {4, 6, 1}, 0, cv);
+    create_chunk({  1, 6,-3}, {2, 1, 1}, 0, cv);
+    create_chunk({ -1, 2,-2}, {6, 4, 1}, 0, cv);
+    create_chunk({  0, 6,-2}, {4, 2, 1}, 0, cv);
+}
+
+void draw_pizza(chunkVecs &cv, std::vector<glm::vec3> &palette) {
     int zIndex = 0;
     int depth;
+    
+    add_rgb_to_palette(palette, 253, 253, 150);
+    add_rgb_to_palette(palette, 255, 105,  96);
+    add_rgb_to_palette(palette, 119, 221, 119);
+    add_rgb_to_palette(palette,   0,   0,   0);
+    add_rgb_to_palette(palette, 131, 105,  83);
     
     // Cheese
     std::vector<int> cheeseDepth{2, 3, 2, 3, 2, 3, 2, 2, 3, 2, 3};

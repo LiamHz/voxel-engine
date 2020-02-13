@@ -28,7 +28,6 @@ int processInput(GLFWwindow *window);
 inline int get_self_product(vector<int> x);
 int set_vertex_attribs(long vboOffset, int nAttrib);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
-void add_rgb_to_palette(std::vector<glm::vec3> &palette, int r, int g, int b);
 int create_scene(Shader shader, unsigned int VAO, unsigned int VBO, vector<vector<int>> &dim, vector<int> &col, std::vector<glm::vec3> &palette);
 
 // Camera
@@ -103,7 +102,7 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         // Dynamic lighting
-        glm::vec3 lightPos(glm::sin(glfwGetTime()) * 15, 10.0f, -15.0f);
+        glm::vec3 lightPos(glm::sin(glfwGetTime()) * 15, 10.0f, glm::sin(glfwGetTime()) * 15);
         objectShader.setVec3("u_lightPos", lightPos);
 
         // Set projection matrix
@@ -155,10 +154,6 @@ inline int get_self_product(vector<int> x) {
     return x[0] * x[1] * x[2];
 }
 
-void add_rgb_to_palette(std::vector<glm::vec3> &palette, int r, int g, int b) {
-    palette.push_back(glm::vec3(r / 255.0f, g / 255.0f, b / 255.0f));
-}
-
 int create_scene(Shader shader, unsigned int VAO, unsigned int VBO, vector<vector<int>> &dim, vector<int> &col, std::vector<glm::vec3> &palette) {
     int nCubes = 1024;
     long vboOffset = 0;
@@ -172,13 +167,7 @@ int create_scene(Shader shader, unsigned int VAO, unsigned int VBO, vector<vecto
     
     glBindVertexArray(VAO);
     
-    add_rgb_to_palette(palette, 253, 253, 150);
-    add_rgb_to_palette(palette, 255, 105,  96);
-    add_rgb_to_palette(palette, 119, 221, 119);
-    add_rgb_to_palette(palette,   0,   0,   0);
-    add_rgb_to_palette(palette, 131, 105,  83);
-    
-    draw_scene("pizza", cv);
+    draw_scene("king", cv, palette);
     
     for (int i = 0; i < dim.size(); i++)
         draw_chunk(pos[i], dim[i], ci);
