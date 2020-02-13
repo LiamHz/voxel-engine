@@ -88,9 +88,7 @@ int main() {
     objectShader.setMat4("model", model);
     
     // Lighting
-    glm::vec3 lightPos(-10.0f, 20.0f, -15.0f);
     objectShader.setVec3("u_lightColor", 1.0f, 1.0f, 1.0f);
-    objectShader.setVec3("u_lightPos", lightPos);
     objectShader.setMat4("model", model);
     
     std::vector<float> lightCube = get_cube(0, 0, 0);
@@ -113,8 +111,12 @@ int main() {
         processInput(window);
         objectShader.use();
         
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(54/255.0f, 81/255.0f, 94/255.0f, 0.5f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        // Dynamic lighting
+        glm::vec3 lightPos(glm::sin(glfwGetTime()) * 15, 10.0f, -15.0f);
+        objectShader.setVec3("u_lightPos", lightPos);
 
         // Set projection matrix
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
@@ -143,8 +145,9 @@ int main() {
         lampShader.setMat4("projection", projection);
         lampShader.setMat4("view", view);
         lampShader.setMat4("model", model);
-        glBindVertexArray(lightVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        lampShader.setVec3("viewPos", camera.Position);
+        // glBindVertexArray(lightVAO);
+        // glDrawArrays(GL_TRIANGLES, 0, 36);
         
         glfwPollEvents();
         
@@ -241,6 +244,14 @@ int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsi
     create_chunk({-s + 2, 0, -zIndex - 1}, {(s-2)*2 + 1, 1, 1}, 0, cv);
     create_chunk({-s + 5, 0, -zIndex - 2}, {(s-5)*2 + 1, 1, 1}, 0, cv);
     create_chunk({-s + 9, 0, -zIndex - 3}, {(s-9)*2 + 1, 1, 1}, 0, cv);
+    // Cheese drip
+    create_chunk({0, -3, -1}, {1, 3, 1}, 0, cv);
+    create_chunk({0, -2, -2}, {1, 2, 1}, 0, cv);
+    create_chunk({1, -2, -4}, {1, 2, 1}, 0, cv);
+    create_chunk({5, -2,-14}, {1, 2, 1}, 0, cv);
+    create_chunk({6, -4,-16}, {1, 4, 1}, 0, cv);
+    create_chunk({8, -3,-21}, {1, 3, 1}, 0, cv);
+    create_chunk({8, -2,-22}, {1, 2, 1}, 0, cv);
     
     // Pepperonis
     create_pepperoni(-1, -7, 1, cv);
@@ -276,7 +287,7 @@ int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsi
     create_chunk({ -2, 2, -32}, {5, 1, 1}, 4, cv);
     create_chunk({  3, 2, -31}, {4, 1, 1}, 4, cv);
     create_chunk({  7, 2, -30}, {3, 1, 1}, 4, cv);
-    create_chunk({  8, 2, -29}, {1, 1, 1}, 4, cv);
+    create_chunk({ 10, 2, -29}, {1, 1, 1}, 4, cv);
     
     for (int i = 0; i < dim.size(); i++)
         draw_chunk(pos[i], dim[i], ci);
