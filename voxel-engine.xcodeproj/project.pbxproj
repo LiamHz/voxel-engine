@@ -43,6 +43,7 @@
 		DF1ED99C23F4B5F200CF963E /* lampShader.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = lampShader.vs; sourceTree = "<group>"; };
 		DF1ED99D23F4B5FD00CF963E /* lampShader.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = lampShader.fs; sourceTree = "<group>"; };
 		DF1ED9A023F4CB8F00CF963E /* scenes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scenes.h; sourceTree = "<group>"; };
+		DF1ED9A223F4E14100CF963E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		DF73E2BA23F3250E00E24124 /* voxel-engine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "voxel-engine"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF73E2C523F3252500E24124 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		DF73E2C723F3257000E24124 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../../usr/local/Cellar/glfw/3.3.2/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
@@ -73,9 +74,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DF1ED9A123F4E0BD00CF963E /* img */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = img;
+			sourceTree = "<group>";
+		};
 		DF73E2B123F3250E00E24124 = {
 			isa = PBXGroup;
 			children = (
+				DF1ED9A223F4E14100CF963E /* README.md */,
 				DF1ED99523F380B900CF963E /* stone_iron.png */,
 				DF73E2D723F32D3B00E24124 /* container.jpg */,
 				DF73E2BC23F3250E00E24124 /* voxel-engine */,
@@ -95,6 +104,7 @@
 		DF73E2BC23F3250E00E24124 /* voxel-engine */ = {
 			isa = PBXGroup;
 			children = (
+				DF1ED9A123F4E0BD00CF963E /* img */,
 				DF73E2CD23F3260100E24124 /* voxel-engine.entitlements */,
 				DF73E2CB23F325A600E24124 /* main.cpp */,
 				DF1ED9A023F4CB8F00CF963E /* scenes.h */,
