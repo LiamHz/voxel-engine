@@ -28,9 +28,8 @@ int processInput(GLFWwindow *window);
 inline int get_self_product(vector<int> x);
 int set_vertex_attribs(long vboOffset, int nAttrib);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
-int createTexture(unsigned int textures[8], std::string texPath, int i);
 void add_rgb_to_palette(std::vector<glm::vec3> &palette, int r, int g, int b);
-int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsigned int VBO, vector<vector<int>> &dim, vector<int> &tex, std::vector<glm::vec3> &palette);
+int create_scene(Shader shader, unsigned int VAO, unsigned int VBO, vector<vector<int>> &dim, vector<int> &col, std::vector<glm::vec3> &palette);
 
 // Camera
 Camera camera(glm::vec3(4.0f, 4.0f, 10.0f));
@@ -59,17 +58,16 @@ int main() {
     Shader lampShader("lampShader.vs", "lampShader.fs");
     
     // Create voxel chunks
-    unsigned int VAO, VBO, textures[8], lightVAO, lightVBO;
+    unsigned int VAO, VBO, lightVAO, lightVBO;
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &lightVBO);
     glGenVertexArrays(1, &VAO);
     glGenVertexArrays(1, &lightVAO);
-    glGenTextures(8, textures);
     vector<vector<int>> dim;
-    vector<int> tex;
+    vector<int> col;
     std::vector<glm::vec3> palette;
     
-    if (create_scene(objectShader, textures, VAO, VBO, dim, tex, palette) != 0)
+    if (create_scene(objectShader, VAO, VBO, dim, col, palette) != 0)
         return -1;
     
     // Set origin world coordinates
@@ -121,7 +119,7 @@ int main() {
         // Render each object in VBO with its associated texture
         for (int i = 0; i < dim.size(); i++) {
             vertSize = get_self_product(dim[i]) * nVerts;
-            objectShader.setVec3("u_objectColor", palette[tex[i]]);
+            objectShader.setVec3("u_objectColor", palette[col[i]]);
             glDrawArrays(GL_TRIANGLES, vertOffset, vertSize);
             vertOffset += vertSize;
         }
@@ -161,11 +159,11 @@ void add_rgb_to_palette(std::vector<glm::vec3> &palette, int r, int g, int b) {
     palette.push_back(glm::vec3(r / 255.0f, g / 255.0f, b / 255.0f));
 }
 
-int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsigned int VBO, vector<vector<int>> &dim, vector<int> &tex, std::vector<glm::vec3> &palette) {
+int create_scene(Shader shader, unsigned int VAO, unsigned int VBO, vector<vector<int>> &dim, vector<int> &col, std::vector<glm::vec3> &palette) {
     int nCubes = 1024;
     long vboOffset = 0;
     vector<vector<int>> pos;
-    chunkVecs cv(pos, dim, tex);
+    chunkVecs cv(pos, dim, col);
     chunkInfo ci(VBO, vboOffset, 0);
     
     // Allocate VBO memory
@@ -173,9 +171,6 @@ int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsi
     glBufferData(GL_ARRAY_BUFFER, nCubes * sizeof(float) * 180, 0, GL_STATIC_DRAW);
     
     glBindVertexArray(VAO);
-    
-    createTexture(textures, "container.jpg", 0);
-    createTexture(textures, "stone_iron.png", 1);
     
     add_rgb_to_palette(palette, 253, 253, 150);
     add_rgb_to_palette(palette, 255, 105,  96);
@@ -187,42 +182,6 @@ int create_scene(Shader shader, unsigned int textures[8], unsigned int VAO, unsi
     
     for (int i = 0; i < dim.size(); i++)
         draw_chunk(pos[i], dim[i], ci);
-    
-    return 0;
-}
-
-int createTexture(unsigned int textures[8], std::string texPath, int i) {
-    if (i == 0)
-        glActiveTexture(GL_TEXTURE0);
-    else if (i == 1)
-        glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, textures[i]);
-
-    // Set texture wrapping and filtering options
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    // Load and generate texture
-    int texWidth, texHeight, nrChannels;
-    unsigned char *data = stbi_load(texPath.c_str(), &texWidth, &texHeight, &nrChannels, 0);
-    if (data) {
-        // Handle multiple image formats
-        if (texPath.find(".jpg") != std::string::npos) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texWidth, texHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        } else if (texPath.find(".png") != std::string::npos) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        } else {
-            std::cout << "Error generating texture with glTexImage2D";
-        }
-        glGenerateMipmap(GL_TEXTURE_2D);
-    } else {
-        std::cout << "Failed to load texture";
-        return -1;
-    }
-
-    stbi_image_free(data);
     
     return 0;
 }
@@ -263,7 +222,7 @@ int init() {
     glViewport(0, 0, screenWidth, screenHeight);
     
     // Enable wireframe mode
-//    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     // Enable z-buffer
     glEnable(GL_DEPTH_TEST);

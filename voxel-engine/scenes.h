@@ -7,9 +7,9 @@ using std::vector;
 struct chunkVecs {
     vector<vector<int>> &pos;
     vector<vector<int>> &dim;
-    vector<int> &tex;
-    chunkVecs(vector<vector<int>> &_pos, vector<vector<int>> &_dim, vector<int> &_tex)
-              : pos(_pos), dim(_dim), tex(_tex) {}
+    vector<int> &col;
+    chunkVecs(vector<vector<int>> &_pos, vector<vector<int>> &_dim, vector<int> &_col)
+              : pos(_pos), dim(_dim), col(_col) {}
 };
 
 // Functions
@@ -28,7 +28,7 @@ void draw_scene(std::string sceneName, chunkVecs &cv) {
 void create_chunk(vector<int> p, vector<int> d, int t, chunkVecs &cv){
     cv.pos.push_back(p);
     cv.dim.push_back(d);
-    cv.tex.push_back(t);
+    cv.col.push_back(t);
 }
 
 void draw_pizza(chunkVecs &cv) {
