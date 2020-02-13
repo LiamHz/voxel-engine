@@ -1,10 +1,9 @@
 ### Voxel Engine
 A voxel engine implemented from scratch with C++ and OpenGL
 
-![Pizza Scene](http://https://github.com/LiamHz/voxel-engine/tree/master/voxel-engine/img/pizza.png "Pizza scene")
+![Pizza Scene](https://github.com/LiamHz/voxel-engine/blob/master/voxel-engine/img/pizza.png "Pizza scene")
 
-![King Scene]
-(http://https://github.com/LiamHz/voxel-engine/tree/master/voxel-engine/img/king.png "Pizza scene")
+![King Scene](https://github.com/LiamHz/voxel-engine/blob/master/voxel-engine/img/king.png "King scene")
 
 #### Features
 - Chunking
