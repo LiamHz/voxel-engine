@@ -114,7 +114,7 @@ int main() {
         objectShader.setMat4("view", view);
         
         glBindVertexArray(VAO);
-        
+        objectShader.setVec3("viewPos", camera.Position);
         // Render each object in VBO with its associated texture
         for (int i = 0; i < dim.size(); i++) {
             vertSize = get_self_product(dim[i]) * nVerts;
@@ -132,7 +132,6 @@ int main() {
         lampShader.setMat4("projection", projection);
         lampShader.setMat4("view", view);
         lampShader.setMat4("model", model);
-        lampShader.setVec3("viewPos", camera.Position);
         // glBindVertexArray(lightVAO);
         // glDrawArrays(GL_TRIANGLES, 0, 36);
         
@@ -167,7 +166,7 @@ int create_scene(Shader shader, unsigned int VAO, unsigned int VBO, vector<vecto
     
     glBindVertexArray(VAO);
     
-    draw_scene("king", cv, palette);
+    draw_scene("pizza", cv, palette);
     
     for (int i = 0; i < dim.size(); i++)
         draw_chunk(pos[i], dim[i], ci);
